@@ -1,16 +1,15 @@
 const axios = require("axios");
-const normalizeTransaction = require("../src/Normalizer");
 
-const xplaTx = async () => {
-  const address = "xpla1yzrrphdt6kywv9dvp63735yat427g7cc36u3rg"; // XPLA 지갑주소
-  const apiUrl = "https://dimension-lcd.xpla.dev/"; // XPLA API
+const mediTx = async () => {
+  const address = "panacea1x3q6mzpfx2gc3czppkh9hfeduqrtnfj5r7zz9a"; // Medi 지갑주소
+  const apiUrl = "https://api.gopanacea.org/"; // Medi API
   try {
     const [latestBlock, chainInfo] = await Promise.all([
       axios.get(`${apiUrl}blocks/latest`),
       axios.get(`${apiUrl}node_info`),
     ]);
-    let lastBlock = latestBlock.data.block.header.height;
-    let plusHeight = lastBlock + 1;
+    let lastBlock = parseInt(latestBlock.data.block.header.height);
+    let plusHeight = parseInt(lastBlock) + 1;
     let chainName = chainInfo.data.application_version.name.toUpperCase();
 
     const [senderTx, recipientTx] = await Promise.all([
@@ -22,68 +21,52 @@ const xplaTx = async () => {
       ),
     ]);
     const txs = [...senderTx.data.txs, ...recipientTx.data.txs];
-    // const uniqTxs = txs.reduce((acc, current) => {
-    //   const x = acc.find((i) => i.txhash === current.txhash);
-    //   if (!x) {
-    //     return acc.concat([current]);
-    //   } else {
-    //     return acc;
-    //   }
-    // }, []);
-
     const filteredTxs = txs.filter((tx) =>
       tx.tx.value.msg.some((msg) => msg.type === "cosmos-sdk/MsgSend")
     );
-
-    console.log(txs.map((tx) => tx.tx.value.msg));
-
-    // console.log(filteredTxs.map((a) => a.tx.value.msg));
     const sortTxs = filteredTxs.sort((a, b) => {
       return a.height - b.height;
     });
-    // console.log(sortTxs);
+    // console.log(sortTxs.length);
     const normalized = sortTxs.map((tx) => {
       let txType = tx.tx.value.msg.map((msg) => msg.type);
-      let txFees = tx.tx.value.fee.amount[0].amount / 1000000000000000000;
+      let txFees = tx.tx.value.fee.amount[0].amount / 1000000;
       let txTime = tx.timestamp.split("T")[0];
 
       const basedObj = {
-        chainName: "XPLA",
+        chainName: "MEDI",
         timestamp: txTime,
         type: txType[0],
         fees: txFees,
         hash: tx.txhash,
         memo: null,
       };
-
       if (tx.logs && tx.logs.length > 0 && tx.logs[0]) {
         const transferLog = tx.logs[0].events.find(
           (e) => e.type === "transfer"
         );
+        // console.log(tx.logs[0].events.find((e) => e.type === "transfer"));
         if (transferLog) {
           const transferAttributes = transferLog.attributes.reduce(
             (acc, attr) => {
               acc[attr.key] = attr.value;
+
               return acc;
             },
             {}
           );
-
-          let veiwTxType =
+          let viewTxType =
             transferAttributes.sender === address ? "Send" : "Receive";
-          console.log(address);
+
           return {
             ...basedObj,
-            type: veiwTxType,
+            type: viewTxType,
             From: transferAttributes.sender,
             To: transferAttributes.recipient,
-            amount:
-              transferAttributes.amount.replace("axpla", "") /
-              1000000000000000000,
+            amount: transferAttributes.amount.replace("umed", "") / 1000000,
           };
         }
       }
-
       return {
         ...basedObj,
         From: null,
@@ -93,14 +76,9 @@ const xplaTx = async () => {
     });
     // console.log(normalized);
     return normalized;
-
-    // console.log(sortTxs[54].tx.value.msg);
-    // console.log(senderTx, "보낸 티엑스");
-    // console.log(recipientTx, "받느 티엑스");
-    // console.log(lastBlock);
   } catch (err) {
-    console.log(err);
+    console.log(err, "에러가났어요");
   }
 };
-xplaTx();
-module.exports = xplaTx;
+// mediTx();
+module.exports = mediTx;

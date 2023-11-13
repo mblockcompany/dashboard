@@ -1,3 +1,4 @@
+const mediTx = require("./chains/medi");
 const xplaTx = require("./chains/xpla");
 const pool = require("./database/dbConnection");
 
@@ -7,9 +8,12 @@ async function main() {
   try {
     conn = await pool.getConnection(); // 데이터베이스 연결을 얻음.
     console.log("디비연결성공");
-    const xplaTxs = await xplaTx();
+    // const xplaTxs = await xplaTx();
+    // const mediTxs = await mediTx();
+    const [xplaTxs, mediTxs] = await Promise.all([xplaTx(), mediTx()]);
+    const allTxs = [...xplaTxs, ...mediTxs];
 
-    for (const tx of xplaTxs) {
+    for (const tx of allTxs) {
       const { chainName, timestamp, type, fees, hash, memo, From, To, amount } =
         tx;
 
