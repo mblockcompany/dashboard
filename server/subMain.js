@@ -1,4 +1,5 @@
 const mediTx = require("./chains/medi");
+const wemixTx = require("./chains/wemix");
 const xplaTx = require("./chains/xpla");
 const pool = require("./database/dbConnection");
 
@@ -10,8 +11,12 @@ async function main() {
     console.log("디비연결성공");
     // const xplaTxs = await xplaTx();
     // const mediTxs = await mediTx();
-    const [xplaTxs, mediTxs] = await Promise.all([xplaTx(), mediTx()]);
-    const allTxs = [...xplaTxs, ...mediTxs];
+    const [xplaTxs, mediTxs, wemixTxs] = await Promise.all([
+      xplaTx(),
+      mediTx(),
+      wemixTx(),
+    ]);
+    const allTxs = [...xplaTxs, ...mediTxs, ...wemixTxs];
 
     for (const tx of allTxs) {
       const { chainName, timestamp, type, fees, hash, memo, From, To, amount } =
