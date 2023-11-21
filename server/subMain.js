@@ -1,6 +1,8 @@
+const klayTx = require("./chains/klay");
 const mediTx = require("./chains/medi");
 const wemixTx = require("./chains/wemix");
 const xplaTx = require("./chains/xpla");
+
 const pool = require("./database/dbConnection");
 
 async function main() {
@@ -11,12 +13,13 @@ async function main() {
     console.log("디비연결성공");
     // const xplaTxs = await xplaTx();
     // const mediTxs = await mediTx();
-    const [xplaTxs, mediTxs, wemixTxs] = await Promise.all([
+    const [xplaTxs, mediTxs, wemixTxs, KlayTxs] = await Promise.all([
       xplaTx(),
       mediTx(),
       wemixTx(),
+      klayTx(),
     ]);
-    const allTxs = [...xplaTxs, ...mediTxs, ...wemixTxs];
+    const allTxs = [...xplaTxs, ...mediTxs, ...wemixTxs, ...KlayTxs];
 
     for (const tx of allTxs) {
       const { chainName, timestamp, type, fees, hash, memo, From, To, amount } =
@@ -26,7 +29,7 @@ async function main() {
         "SELECT * FROM txhistory WHERE txhistory_hash = ?",
         [hash]
       );
-      console.log(rows);
+      console.log(rows, "디비콘솔 rows");
       if (rows === undefined) {
         const insertQuery = `
         INSERT INTO txhistory (

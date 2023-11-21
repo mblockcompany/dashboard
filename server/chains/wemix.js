@@ -75,7 +75,7 @@ const wemixTx = async () => {
           timestamp: txTime,
           type: trasnferType,
           fees: feeDot,
-          hash: tx.block_hash,
+          hash: tx.transaction_hash.substring(2),
           memo: null,
           From: tx.sender,
           To: tx.receiver,
