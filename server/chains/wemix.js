@@ -1,5 +1,6 @@
 const { default: axios } = require("axios");
 const ethers = require("ethers");
+require("dotenv").config();
 
 const getContractCode = async (address) => {
   try {
@@ -7,8 +8,7 @@ const getContractCode = async (address) => {
       `https://explorerapi.wemix.com/v1/contracts/${address}/code`,
       {
         headers: {
-          "api-key":
-            "1ba5e446edf1997f67b51bf9e60b3fbba6fa1bf84301115292805d7e24f43539",
+          "api-key": `${process.env.WEMIX_APIKEY}`,
           "Content-Type": "application/json",
         },
       }
@@ -25,6 +25,32 @@ const getContractCode = async (address) => {
   }
 };
 
+const liveWemixBalance = async () => {
+  const address = "0x8eab8a3535b6c2715dcb3da026c2a1241f08b28d";
+  const wemixApi = "https://explorerapi.wemix.com";
+  try {
+    const WemixBalance = await axios.post(
+      `${wemixApi}/v1/accounts/balance`,
+      {
+        addresses: ["0x8eab8a3535b6c2715dcb3da026c2a1241f08b28d"],
+      },
+      {
+        headers: {
+          "api-key": `${process.env.WEMIX_APIKEY}`,
+          "content-key": "application/json",
+        },
+      }
+    );
+    let filteredWemixBalance = WemixBalance.data.results.data.map(
+      (tx) => tx.balance / 1000000000000000000
+    );
+    return filteredWemixBalance;
+  } catch (err) {
+    console.log(err, "위믹스 밸런스체크 에러");
+  }
+};
+
+liveWemixBalance();
 const wemixTx = async () => {
   const address = "0x8eab8a3535b6c2715dcb3da026c2a1241f08b28d";
   const wemixApi = "https://api.wemix.com";
@@ -34,8 +60,7 @@ const wemixTx = async () => {
       `https://explorerapi.wemix.com/v1/accounts/${address}/transactions`,
       {
         headers: {
-          "api-key":
-            "1ba5e446edf1997f67b51bf9e60b3fbba6fa1bf84301115292805d7e24f43539",
+          "api-key": `${process.env.WEMIX_APIKEY}`,
         },
       }
     );
@@ -90,4 +115,4 @@ const wemixTx = async () => {
 };
 
 // wemixTx();
-module.exports = wemixTx;
+module.exports = { wemixTx, liveWemixBalance };
