@@ -45,7 +45,9 @@ const ListTitle = styled.div`
   width: 100%;
   justify-content: space-around;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  border-bottom: 0.5px solid #e7e7e7ff;
 `;
 const ListBody = styled.div`
   display: flex;
@@ -65,7 +67,9 @@ const ListRow = styled.div`
   justify-content: space-around;
   align-items: center;
   font-size: 11px;
-  margin-bottom: 10px;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  border-bottom: 0.5px solid #f3f3f331;
 `;
 
 function LiveList() {
@@ -90,6 +94,7 @@ function LiveList() {
   const calculatePriceChange = (currentPrice, averagePrice) => {
     return ((currentPrice - averagePrice) / averagePrice) * 100;
   };
+
   return (
     <ListMain>
       <ListHeader>
@@ -130,7 +135,7 @@ function LiveList() {
                         </div>
                       ) : (
                         <div style={{ color: "#f6465d" }}>
-                          - {priceChange.toFixed(2)}%
+                          - {Math.abs(priceChange).toFixed(2)}%
                         </div>
                       )
                     ) : (

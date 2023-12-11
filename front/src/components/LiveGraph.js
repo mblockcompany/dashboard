@@ -39,6 +39,7 @@ const GraphDiv = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
   @media (max-width: 1000px) {
     border-right: none;
     border-bottom: 1px solid white;
@@ -243,7 +244,7 @@ function LiveGraph({ chartData, roundData }) {
 
               {chartData && chartData.series && (
                 <ApexChart
-                  width="105%"
+                  width="100%"
                   options={chartOptions}
                   series={chartData.series}
                   type="line"

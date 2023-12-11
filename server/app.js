@@ -13,6 +13,7 @@ app.use(cors());
 
 app.get("/", async (req, res) => {
   const liveData = await liveCache();
+  console.log(liveData, "getStatusDB");
   res.json(liveData);
 });
 

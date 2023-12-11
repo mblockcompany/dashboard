@@ -1,6 +1,10 @@
 const pool = require("./dbConnection");
 // const insertAsset = require("./insertAsset");
 
+// 자산현황
+// 하루 3번 데이터 요청 후 저장한 데이터를
+// 해당 일자에 prices 와 total 값의 평균값을 반환함.
+
 const getStatus = async () => {
   try {
     console.log("쿼리시작");

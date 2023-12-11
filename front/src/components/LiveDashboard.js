@@ -3,6 +3,7 @@ import LiveGraph from "./LiveGraph";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LiveList from "./LiveList";
+import AssetStatus from "./AssetStatus";
 
 const MainDiv = styled.div`
   margin: 30px;
@@ -10,6 +11,8 @@ const MainDiv = styled.div`
   border-radius: 25px;
   border: 1px solid white;
   background-color: #1e1e1e;
+  width: 60vw;
+  max-width: 1000px;
 `;
 const CateDiv = styled.div`
   display: flex;
@@ -41,6 +44,11 @@ const LiveDiv = styled.div`
 `;
 //
 //
+
+const BoundaryLine = styled.div`
+  margin: 20px 10px;
+  border: 1px solid #767676;
+`;
 
 function LiveDashboard() {
   const [chartData, setChartData] = useState({
@@ -148,6 +156,10 @@ function LiveDashboard() {
       <LiveDiv>
         <LiveGraph chartData={chartData} roundData={roundData} />
         <LiveList />
+      </LiveDiv>
+      <BoundaryLine></BoundaryLine>
+      <LiveDiv>
+        <AssetStatus />
       </LiveDiv>
     </MainDiv>
   );
