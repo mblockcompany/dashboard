@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import LiveList from "./LiveList";
 import AssetStatus from "./AssetStatus";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import TxHistory from "./TxHistory";
 
 const MainDiv = styled.div`
   margin: 30px;
@@ -90,30 +92,11 @@ function LiveDashboard() {
           {}
         );
 
-        const categories = Object.keys(aggregatedData);
+        const categories = Object.keys(aggregatedData).slice(-7);
         const seriesData = categories.map((date) => aggregatedData[date]);
         console.log(categories, "category data");
         console.log(seriesData, "seriese data");
-        // const groupedData = data.reduce((acc, item) => {
-        //   const date = item.assetstatus_date.split(" ")[0]; // '월-일'만 추출
-        //   if (!acc[date]) {
-        //     acc[date] = new Set(); // 중복을 방지하기 위해 Set을 사용
-        //   }
-        //   acc[date].add(item.assetstatus_name + item.assetstatus_date.split(" ")[1]); // '시-분-초'를 포함한 이름을 추가
-        //   return acc;
-        // }, {});
 
-        // const seriesData = Object.keys(groupedData).map((date) => {
-        //   const entries = data.filter((item) => item.assetstatus_date.startsWith(date));
-        //   const total = entries.reduce(
-        //     (sum, entry) => sum + entry.assetstatus_balances * entry.assetstatus_prices,
-        //     0
-        //   );
-        //   const average = total / groupedData[date].size; // 유니크한 항목의 수로 나누어 평균을 구함
-        //   return average;
-        // });
-
-        // 각 밸런스 (원형그래프)
         const latestData = data
           .filter((asset) =>
             ["Klay", "Wemix", "Xpla", "Medi"].includes(asset.assetstatus_name)
@@ -148,20 +131,45 @@ function LiveDashboard() {
   }, []);
 
   return (
-    <MainDiv>
-      <CateDiv>
-        <DetailCate>보유 현황</DetailCate>
-        <DetailCate>거래 내역</DetailCate>
-      </CateDiv>
-      <LiveDiv>
-        <LiveGraph chartData={chartData} roundData={roundData} />
-        <LiveList />
-      </LiveDiv>
-      <BoundaryLine></BoundaryLine>
-      <LiveDiv>
-        <AssetStatus />
-      </LiveDiv>
-    </MainDiv>
+    <Router>
+      <MainDiv>
+        <CateDiv>
+          <Link to="/status">
+            <DetailCate>보유 현황</DetailCate>
+          </Link>
+          <Link to="/history">
+            <DetailCate>거래 내역</DetailCate>
+          </Link>
+        </CateDiv>
+        <Routes>
+          <Route
+            path="/status"
+            element={
+              <>
+                <LiveDiv>
+                  <LiveGraph chartData={chartData} roundData={roundData} />
+                  <LiveList />
+                </LiveDiv>
+                <BoundaryLine></BoundaryLine>
+                <LiveDiv>
+                  <AssetStatus />
+                </LiveDiv>
+              </>
+            }
+          />
+          <Route
+            path="/history"
+            element={
+              <>
+                <LiveDiv>
+                  <TxHistory />
+                </LiveDiv>
+              </>
+            }
+          />
+        </Routes>
+      </MainDiv>
+    </Router>
   );
 }
 

@@ -33,7 +33,7 @@ const getStatus = async () => {
     // console.log(assetQ);
     return assetQ;
   } catch (err) {
-    console.log(err);
+    console.log(err, "getStatus Error");
   }
 };
 // getStatus();

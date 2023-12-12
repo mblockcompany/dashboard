@@ -31,10 +31,10 @@ const mediTx = async () => {
 
     const [senderTx, recipientTx] = await Promise.all([
       axios.get(
-        `${apiUrl}/txs?message.sender=${address}&limit=${plusHeight}&tx.maxheight=${lastBlock}`
+        `${apiUrl}txs?message.sender=${address}&limit=${plusHeight}&tx.maxheight=${lastBlock}`
       ),
       axios.get(
-        `${apiUrl}/txs?transfer.recipient=${address}&limit=${plusHeight}&tx.maxheight=${lastBlock}`
+        `${apiUrl}txs?transfer.recipient=${address}&limit=${plusHeight}&tx.maxheight=${lastBlock}`
       ),
     ]);
     const txs = [...senderTx.data.txs, ...recipientTx.data.txs];

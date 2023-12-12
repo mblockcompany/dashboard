@@ -24,11 +24,11 @@ GROUP BY
     subquery.assetstatus_name;
 `
     );
-    console.log(avgQ.map((tx) => (tx.total += tx.average_total)));
+    // console.log(avgQ.map((tx) => (tx.total += tx.average_total)));
     return avgQ;
   } catch (err) {
     console.log(err);
   }
 };
-getPrevAvg();
+// getPrevAvg();
 module.exports = getPrevAvg;

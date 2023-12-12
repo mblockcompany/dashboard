@@ -29,7 +29,7 @@ const assetStatus = async () => {
         price: priceResults[`${chainNames[index].toLowerCase()}Price`],
       };
     });
-    console.log(chainData);
+    // console.log(chainData);
     const AssetInsertQ = `insert into assetstatus(assetstatus_name, assetstatus_balances, assetstatus_prices) value(?,?,?)`;
     for (const data of chainData) {
       await conn.query(AssetInsertQ, [

@@ -50,7 +50,6 @@ const liveWemixBalance = async () => {
   }
 };
 
-liveWemixBalance();
 const wemixTx = async () => {
   const address = "0x8eab8a3535b6c2715dcb3da026c2a1241f08b28d";
   const wemixApi = "https://api.wemix.com";
@@ -110,7 +109,7 @@ const wemixTx = async () => {
     // console.log(filteredTxs);
     return filteredTxs;
   } catch (err) {
-    console.log(err);
+    console.log(err, "WEMIX API Error");
   }
 };
 

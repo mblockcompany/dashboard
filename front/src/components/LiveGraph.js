@@ -132,7 +132,6 @@ function LiveGraph({ chartData, roundData }) {
 
       let totalRatio = ((livePrices - secOldPrice) / secOldPrice) * 100;
       setTotalRatio(totalRatio.toFixed(2));
-      // console.log(latestBalances);
     } catch (err) {
       console.log(err);
     }
@@ -160,9 +159,7 @@ function LiveGraph({ chartData, roundData }) {
   }, [roundData]);
 
   let labels = Object.keys(latestBalances);
-
   let donutSeries = labels.map((label) => parseFloat(latestBalances[label]));
-  // console.log(donutSeries);
 
   const donutOptions = {
     chart: {
@@ -183,6 +180,7 @@ function LiveGraph({ chartData, roundData }) {
       },
     ],
   };
+
   const chartOptions = {
     tooltip: {
       style: {
@@ -229,10 +227,13 @@ function LiveGraph({ chartData, roundData }) {
                         color: "#0ecb81",
                       }}
                     >
-                      + {totalRatio}%
+                      + {Math.abs(totalRatio)}%
                     </div>
                   ) : (
-                    <div style={{ color: "#f6465d" }}>- {totalRatio}%</div>
+                    <div style={{ color: "#f6465d" }}>
+                      {" "}
+                      - {Math.abs(totalRatio)}%
+                    </div>
                   )
                 ) : (
                   <>Loading...</>

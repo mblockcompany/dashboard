@@ -29,7 +29,7 @@ const txHistoryCache = async () => {
     console.log("데이터 캐싱");
   } else {
     console.log(new Date(), "캐시만료");
-    getHistory();
+    // getHistory();
   }
   return data;
 };

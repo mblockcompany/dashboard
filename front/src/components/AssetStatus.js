@@ -168,7 +168,9 @@ function AssetStatus() {
       groups[dateKey].total += parseFloat(item.assetstatus_total);
     });
     console.log(groups, "groups");
-    return Object.values(groups);
+    return Object.values(groups).sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
   };
 
   const groupedData = getGroupedData();
