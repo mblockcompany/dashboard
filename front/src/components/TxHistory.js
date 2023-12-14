@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const MainDiv = styled.div`
-  color: red;
+  width: 100%;
 `;
 
 function TxHistory() {
