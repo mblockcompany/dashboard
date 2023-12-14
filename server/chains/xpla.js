@@ -1,9 +1,25 @@
 const axios = require("axios");
 const normalizeTransaction = require("../src/Normalizer");
 
+const address = "xpla1yzrrphdt6kywv9dvp63735yat427g7cc36u3rg"; // XPLA 지갑주소
+const apiUrl = "https://dimension-lcd.xpla.dev/"; // XPLA API
+
+const liveXplaTx = async () => {
+  try {
+    const XplaBalance = await axios.get(
+      `${apiUrl}cosmos/bank/v1beta1/balances/${address}`
+    );
+    const filteredXplaBalance = XplaBalance.data.balances.map(
+      (tx) => tx.amount / 1000000000000000000
+    );
+
+    return filteredXplaBalance;
+  } catch (err) {
+    console.log("Xpla balance Check err", err);
+  }
+};
+
 const xplaTx = async () => {
-  const address = "xpla1yzrrphdt6kywv9dvp63735yat427g7cc36u3rg"; // XPLA 지갑주소
-  const apiUrl = "https://dimension-lcd.xpla.dev/"; // XPLA API
   try {
     const [latestBlock, chainInfo] = await Promise.all([
       axios.get(`${apiUrl}blocks/latest`),
@@ -35,7 +51,7 @@ const xplaTx = async () => {
       tx.tx.value.msg.some((msg) => msg.type === "cosmos-sdk/MsgSend")
     );
 
-    console.log(txs.map((tx) => tx.tx.value.msg));
+    // console.log(txs.map((tx) => tx.tx.value.msg));
 
     // console.log(filteredTxs.map((a) => a.tx.value.msg));
     const sortTxs = filteredTxs.sort((a, b) => {
@@ -71,7 +87,7 @@ const xplaTx = async () => {
 
           let veiwTxType =
             transferAttributes.sender === address ? "Send" : "Receive";
-          console.log(address);
+          // console.log(address);
           return {
             ...basedObj,
             type: veiwTxType,
@@ -99,8 +115,8 @@ const xplaTx = async () => {
     // console.log(recipientTx, "받느 티엑스");
     // console.log(lastBlock);
   } catch (err) {
-    console.log(err);
+    console.log(err, "xpla 에러");
   }
 };
 xplaTx();
-module.exports = xplaTx;
+module.exports = { xplaTx, liveXplaTx };

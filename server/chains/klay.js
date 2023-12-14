@@ -2,30 +2,65 @@ const { default: axios } = require("axios");
 const { ethers } = require("ethers");
 require("dotenv").config();
 
-const klayTxUrl = "https://th-api.klaytnapi.com/v2/transfer";
+const klayTransferUrl = "https://th-api.klaytnapi.com/v2/transfer";
+const klayBalanceUrl = "https://public-en-cypress.klaytn.net"; // public
 const accKey = process.env.KAS_ACCID;
 const secretKey = process.env.KAS_SECRET;
 const klayAddress = "0x1c57ea31aadec219e6e8e5aa3d315f2066e6ec1f";
 const presetId = "729";
 
+const liveKlayTx = async () => {
+  const liveKlay = await axios.get(klayBalanceUrl, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: {
+      jsonrpc: "2.0",
+      method: "klay_getBalance",
+      params: [klayAddress, "latest"],
+      id: 1,
+    },
+  });
+  const klayBalance = parseInt(liveKlay.data.result, 16) / 1000000000000000000;
+  // console.log(klayBalance);
+  return [klayBalance];
+};
+// liveKlayTx();
+
 const klayTx = async () => {
   try {
-    const KlayTxHistory = await axios.get(klayTxUrl, {
-      auth: {
-        username: accKey,
-        password: secretKey,
-      },
-      headers: {
-        "x-chain-id": "8217",
-        "Content-Type": "application/json",
-      },
-      params: {
-        kind: "klay",
-        presets: presetId,
-      },
-    });
+    const [KlayTxHistory, klayTotalBalance] = await Promise.all([
+      axios.get(klayTransferUrl, {
+        auth: {
+          username: accKey,
+          password: secretKey,
+        },
+        headers: {
+          "x-chain-id": "8217",
+          "Content-Type": "application/json",
+        },
+        params: {
+          kind: "klay",
+          presets: presetId,
+        },
+      }),
+      axios.get(klayBalanceUrl, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: {
+          jsonrpc: "2.0",
+          method: "klay_getBalance",
+          params: [klayAddress, "latest"],
+          id: 1,
+        },
+      }),
+    ]);
     const itemKlay = KlayTxHistory.data.items;
-    console.log(itemKlay.sort((a, b) => a.blockNumber - b.blockNumber));
+    // console.log(itemKlay.sort((a, b) => a.blockNumber - b.blockNumber));
+
+    const totalBalance =
+      parseInt(klayTotalBalance.data.result, 16) / 1000000000000000000;
 
     const filteredKlay = itemKlay
       .sort((a, b) => a.blockNumber - b.blockNumber)
@@ -36,6 +71,7 @@ const klayTx = async () => {
       })
       .map((tx) => {
         let transferType = tx.from === klayAddress ? "Send" : "Receive";
+
         let unixToDate = (unixTimestamp) => {
           let date = new Date(unixTimestamp * 1000);
           date.setHours(date.getHours() + 9);
@@ -58,15 +94,15 @@ const klayTx = async () => {
         };
       });
 
-    console.log(filteredKlay);
+    // console.log(filteredKlay);
 
-    return filteredKlay;
+    return { filteredKlay, totalBalance };
   } catch (err) {
-    console.log(err);
+    console.log(err, "klay.tx 에러");
   }
 };
-klayTx();
-module.exports = klayTx;
+// klayTx();
+module.exports = { klayTx, liveKlayTx };
 
 /*
 return

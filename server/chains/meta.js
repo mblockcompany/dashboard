@@ -17,7 +17,8 @@ const metaTx = async () => {
         },
       }
     );
-    console.log(balances.data);
+    // console.log(balances.data);
+
     return balances.data;
   } catch (err) {
     console.log(err);

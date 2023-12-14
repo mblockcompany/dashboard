@@ -1,8 +1,25 @@
 const axios = require("axios");
 
+const address = "panacea1x3q6mzpfx2gc3czppkh9hfeduqrtnfj5r7zz9a"; // Medi 지갑주소
+const apiUrl = "https://api.gopanacea.org/"; // Medi API
+
+const liveMediTx = async () => {
+  try {
+    const mediBalance = await axios.get(
+      `${apiUrl}cosmos/bank/v1beta1/balances/${address}`
+    );
+    const filteredMediBalance = mediBalance.data.balances.map(
+      (tx) => tx.amount / 1000000
+    );
+
+    return filteredMediBalance;
+  } catch (err) {
+    console.log("medibloc balance Check err", err);
+  }
+};
+// liveMediTx();
+
 const mediTx = async () => {
-  const address = "panacea1x3q6mzpfx2gc3czppkh9hfeduqrtnfj5r7zz9a"; // Medi 지갑주소
-  const apiUrl = "https://api.gopanacea.org/"; // Medi API
   try {
     const [latestBlock, chainInfo] = await Promise.all([
       axios.get(`${apiUrl}blocks/latest`),
@@ -14,10 +31,10 @@ const mediTx = async () => {
 
     const [senderTx, recipientTx] = await Promise.all([
       axios.get(
-        `${apiUrl}/txs?message.sender=${address}&limit=${plusHeight}&tx.maxheight=${lastBlock}`
+        `${apiUrl}txs?message.sender=${address}&limit=${plusHeight}&tx.maxheight=${lastBlock}`
       ),
       axios.get(
-        `${apiUrl}/txs?transfer.recipient=${address}&limit=${plusHeight}&tx.maxheight=${lastBlock}`
+        `${apiUrl}cosmos/tx/v1beta1/txs?transfer.recipient=${address}&limit=${plusHeight}&tx.maxheight=${lastBlock}`
       ),
     ]);
     const txs = [...senderTx.data.txs, ...recipientTx.data.txs];
@@ -81,4 +98,4 @@ const mediTx = async () => {
   }
 };
 // mediTx();
-module.exports = mediTx;
+module.exports = { mediTx, liveMediTx };

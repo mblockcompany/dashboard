@@ -1,11 +1,11 @@
-const klayTx = require("./chains/klay");
-const mediTx = require("./chains/medi");
-const wemixTx = require("./chains/wemix");
-const xplaTx = require("./chains/xpla");
+const { klayTx } = require("../chains/klay");
+const { mediTx } = require("../chains/medi");
+const { wemixTx } = require("../chains/wemix");
+const { xplaTx } = require("../chains/xpla");
 
-const pool = require("./database/dbConnection");
+const pool = require("./dbConnection");
 
-async function main() {
+async function insertHistory() {
   let conn;
 
   try {
@@ -13,13 +13,14 @@ async function main() {
     console.log("디비연결성공");
     // const xplaTxs = await xplaTx();
     // const mediTxs = await mediTx();
-    const [xplaTxs, mediTxs, wemixTxs, KlayTxs] = await Promise.all([
+    const [xplaTxs, mediTxs, wemixTxs, klayResult] = await Promise.all([
       xplaTx(),
       mediTx(),
       wemixTx(),
       klayTx(),
     ]);
-    const allTxs = [...xplaTxs, ...mediTxs, ...wemixTxs, ...KlayTxs];
+    const klayTxs = klayResult.filteredKlay;
+    const allTxs = [...xplaTxs, ...mediTxs, ...wemixTxs, ...klayTxs];
 
     for (const tx of allTxs) {
       const { chainName, timestamp, type, fees, hash, memo, From, To, amount } =
@@ -29,7 +30,7 @@ async function main() {
         "SELECT * FROM txhistory WHERE txhistory_hash = ?",
         [hash]
       );
-      console.log(rows, "디비콘솔 rows");
+      // console.log(rows, "디비콘솔 rows");
       if (rows === undefined) {
         const insertQuery = `
         INSERT INTO txhistory (
@@ -51,8 +52,15 @@ async function main() {
         console.log(`새로운데이터 삽입 : ${hash}`);
       } else {
         console.log(`중복데이터 ${hash}`);
+        // console.log("중복");
       }
     }
+    // console.log(totalBalance, "totalbalance");
+    //Asset Status Logic
+    // for (const assetTx of allTxs) {
+    //   const { totalBalance } = assetTx;
+    //   console.log(totalBalance);
+    // }
   } catch (err) {
     console.error("Error:", err.message);
   } finally {
@@ -64,6 +72,6 @@ async function main() {
       }
     }
   }
-  // pool.end()는 필요 없습니다. pool을 재사용하려면 프로세스가 종료될 때까지 열어 두세요.
 }
-main();
+// insertHistory();
+module.exports = insertHistory;
