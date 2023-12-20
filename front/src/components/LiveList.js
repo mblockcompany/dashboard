@@ -149,23 +149,22 @@ function LiveList() {
           </LeftBody>
           <RightBody>
             <WideListItem>
-              ₩ {totalPrice.toLocaleString()}
-              {totalPrice && prevAvgTotal ? (
-                totalPrice - prevAvgTotal > 0 ? (
-                  <div
-                    style={{
-                      color: "#0ecb81",
-                    }}
-                  >
-                    + ₩ {(totalPrice - prevAvgTotal).toLocaleString()}
-                  </div>
-                ) : (
-                  <div style={{ color: "#f6465d" }}>
-                    - ₩ {(totalPrice - prevAvgTotal).toLocaleString()}
-                  </div>
-                )
-              ) : (
+              {totalPrice === undefined ? (
                 <>Loading...</>
+              ) : (
+                <>
+                  ₩ {totalPrice.toLocaleString()}
+                  {prevAvgTotal !== undefined &&
+                    (totalPrice - prevAvgTotal > 0 ? (
+                      <div style={{ color: "#0ecb81" }}>
+                        + ₩ {(totalPrice - prevAvgTotal).toLocaleString()}
+                      </div>
+                    ) : (
+                      <div style={{ color: "#f6465d" }}>
+                        - ₩ {(totalPrice - prevAvgTotal).toLocaleString()}
+                      </div>
+                    ))}
+                </>
               )}
             </WideListItem>
           </RightBody>
