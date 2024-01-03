@@ -18,5 +18,5 @@ const getHistory = async () => {
     console.log(err, "getHistory 에러");
   }
 };
-// getHistory();
+getHistory();
 module.exports = getHistory;

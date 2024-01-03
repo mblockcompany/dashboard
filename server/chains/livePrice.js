@@ -56,5 +56,4 @@ const geckoPrice = async () => {
     console.log(err, "현재 가격 가져오기 에러");
   }
 };
-
 module.exports = geckoPrice;

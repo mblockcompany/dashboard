@@ -31,71 +31,78 @@ const mediTx = async () => {
 
     const [senderTx, recipientTx] = await Promise.all([
       axios.get(
-        `${apiUrl}txs?message.sender=${address}&limit=${plusHeight}&tx.maxheight=${lastBlock}`
+        `${apiUrl}cosmos/tx/v1beta1/txs?events=transfer.sender='${address}'&limit=${plusHeight}&tx.maxheight=${lastBlock}`
       ),
       axios.get(
-        `${apiUrl}cosmos/tx/v1beta1/txs?transfer.recipient=${address}&limit=${plusHeight}&tx.maxheight=${lastBlock}`
+        `${apiUrl}cosmos/tx/v1beta1/txs?events=transfer.recipient='${address}'&limit=${plusHeight}&tx.maxheight=${lastBlock}`
       ),
     ]);
-    const txs = [...senderTx.data.txs, ...recipientTx.data.txs];
-    const filteredTxs = txs.filter((tx) =>
-      tx.tx.value.msg.some((msg) => msg.type === "cosmos-sdk/MsgSend")
-    );
-    const sortTxs = filteredTxs.sort((a, b) => {
-      return a.height - b.height;
-    });
-    // console.log(sortTxs.length);
-    const normalized = sortTxs.map((tx) => {
-      let txType = tx.tx.value.msg.map((msg) => msg.type);
-      let txFees = tx.tx.value.fee.amount[0].amount / 1000000;
-      let txTime = tx.timestamp.split("T")[0];
 
-      const basedObj = {
-        chainName: "MEDI",
-        timestamp: txTime,
-        type: txType[0],
-        fees: txFees,
-        hash: tx.txhash,
-        memo: null,
-      };
-      if (tx.logs && tx.logs.length > 0 && tx.logs[0]) {
-        const transferLog = tx.logs[0].events.find(
-          (e) => e.type === "transfer"
-        );
-        // console.log(tx.logs[0].events.find((e) => e.type === "transfer"));
-        if (transferLog) {
-          const transferAttributes = transferLog.attributes.reduce(
-            (acc, attr) => {
-              acc[attr.key] = attr.value;
+    const txs = [
+      ...senderTx.data.tx_responses,
+      ...recipientTx.data.tx_responses,
+    ];
+    const normalized = txs
+      .map((tx) => {
+        let timestamp = tx.timestamp.split("T")[0];
+        let height = tx.height;
+        let txHash = tx.txhash;
+        let fee = tx.tx.auth_info.fee.amount
+          .map((fee) => fee.amount / 1000000)
+          .reduce((a, b) => a + b, 0);
 
-              return acc;
-            },
-            {}
+        const logs = tx.logs.flatMap((log) => {
+          const messageEvent = log.events.find(
+            (event) => event.type === "message"
           );
-          let viewTxType =
-            transferAttributes.sender === address ? "Send" : "Receive";
 
-          return {
-            ...basedObj,
-            type: viewTxType,
-            From: transferAttributes.sender,
-            To: transferAttributes.recipient,
-            amount: transferAttributes.amount.replace("umed", "") / 1000000,
-          };
-        }
-      }
-      return {
-        ...basedObj,
-        From: null,
-        To: null,
-        amount: null,
-      };
-    });
-    // console.log(normalized);
+          const transferEvent = log.events.find(
+            (event) => event.type === "transfer"
+          );
+
+          if (messageEvent && transferEvent) {
+            const isMsgSend = messageEvent.attributes.some(
+              (attr) => attr.value === "/cosmos.bank.v1beta1.MsgSend"
+            );
+
+            if (isMsgSend) {
+              const fromAddress = transferEvent.attributes.find(
+                (attr) => attr.key === "sender"
+              )?.value;
+              const toAddress = transferEvent.attributes.find(
+                (attr) => attr.key === "recipient"
+              )?.value;
+              const amount = transferEvent.attributes.find(
+                (attr) => attr.key === "amount"
+              )?.value;
+              let type = fromAddress === address ? "Send" : "Receive";
+
+              return {
+                chainName: "MEDI",
+                timestamp,
+                type: type,
+                // height,
+                fees: fee,
+                hash: txHash,
+                From: fromAddress,
+                To: toAddress,
+                amount: amount.replace("umed", "") / 1000000,
+                memo: null,
+              };
+            }
+          }
+          return null;
+        });
+
+        return logs.filter((log) => log !== null);
+      })
+      .flatMap((log) => log)
+      .filter((item) => item !== null);
+    console.log(normalized, "extracted");
     return normalized;
   } catch (err) {
     console.log(err, "에러가났어요");
   }
 };
-// mediTx();
+mediTx();
 module.exports = { mediTx, liveMediTx };

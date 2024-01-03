@@ -86,5 +86,5 @@ ORDER BY
     console.log(err);
   }
 };
-// getListing();
+getListing();
 module.exports = getListing;

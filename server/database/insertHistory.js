@@ -21,7 +21,7 @@ async function insertHistory() {
     ]);
     const klayTxs = klayResult.filteredKlay;
     const allTxs = [...xplaTxs, ...mediTxs, ...wemixTxs, ...klayTxs];
-
+    console.log(allTxs, "allTxs");
     for (const tx of allTxs) {
       const { chainName, timestamp, type, fees, hash, memo, From, To, amount } =
         tx;
@@ -73,5 +73,5 @@ async function insertHistory() {
     }
   }
 }
-// insertHistory();
+insertHistory();
 module.exports = insertHistory;

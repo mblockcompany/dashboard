@@ -36,5 +36,5 @@ const getStatus = async () => {
     console.log(err, "getStatus Error");
   }
 };
-// getStatus();
+getStatus();
 module.exports = getStatus;

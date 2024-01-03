@@ -30,5 +30,5 @@ GROUP BY
     console.log(err);
   }
 };
-// getPrevAvg();
+getPrevAvg();
 module.exports = getPrevAvg;
