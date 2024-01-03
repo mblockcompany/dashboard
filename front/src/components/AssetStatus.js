@@ -15,7 +15,7 @@ const HeaderTitle = styled.div`
   display: flex;
   justify-content: left;
   align-items: center;
-  font-size: calc(12px+1vmin);
+  font-size: calc(10px+1vmin);
   font-weight: 550;
 `;
 const HeaderCalendar = styled.div`
@@ -167,14 +167,14 @@ function AssetStatus() {
       groups[dateKey].listings.push(item);
       groups[dateKey].total += parseFloat(item.assetstatus_total);
     });
-    console.log(groups, "groups");
+    // console.log(groups, "groups");
     return Object.values(groups).sort(
       (a, b) => new Date(b.date) - new Date(a.date)
     );
   };
 
   const groupedData = getGroupedData();
-  console.log(groupedData, "groupData");
+  // console.log(groupedData, "groupData");
 
   return (
     <>

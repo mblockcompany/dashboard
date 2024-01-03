@@ -21,6 +21,7 @@ const LeftTitle = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 600;
+  color: white;
   & button {
     margin-left: 20px;
     background: none;
@@ -28,10 +29,9 @@ const LeftTitle = styled.div`
     font-size: calc(15px+1vmin);
     font-weight: 600;
     border-radius: 10px;
-    border: 1px solid white;
+    border: none;
     padding: 5px 10px;
     &:hover {
-      cursor: pointer;
       color: gray;
     }
   }
@@ -45,6 +45,7 @@ const RightTitle = styled.div`
     border: 1px solid white;
     border-radius: 5px;
     color: white;
+
     background: none;
     &:hover {
       cursor: pointer;
@@ -148,8 +149,15 @@ function TxHistory() {
 
   // filtered dropBox, Cal
   const handleSelectChange = (selectedOption) => {
-    console.log("Selec options", selectedOption);
-    setSelectedOption(selectedOption);
+    const group = options.find((group) =>
+      group.options.includes(selectedOption)
+    );
+    const fieldName = group ? group.fieldName : null;
+
+    setSelectedOption({
+      ...selectedOption,
+      fieldName: fieldName,
+    });
   };
   const getFilteredData = () => {
     // calender Logic
@@ -158,23 +166,24 @@ function TxHistory() {
     const end = new Date(endDate);
     end.setDate(end.getDate() + 1);
 
-    if (!selectedOption) {
-      return data.filter((item) => {
-        const itemDate = new Date(item.txhistory_date);
-        return itemDate >= start && itemDate < end;
-      });
-    }
+    // if (!selectedOption) {
+    //   return data.filter((item) => {
+    //     const itemDate = new Date(item.txhistory_date);
+    //     return itemDate >= start && itemDate < end;
+    //   });
+    // }
 
     return data.filter((item) => {
       const itemDate = new Date(item.txhistory_date);
       const isDateInRange = itemDate >= start && itemDate < end;
 
-      let isOptionMatch = false;
-      if (selectedOption && selectedOption.label === "위믹스") {
-        isOptionMatch = item.txhistory_name === selectedOption.value;
-      } else if (selectedOption && selectedOption.label === "MEDI") {
-        isOptionMatch = item.txhistory_name === selectedOption.value;
+      if (!selectedOption || selectedOption.label === "전체보기") {
+        return isDateInRange;
       }
+
+      const filterField = selectedOption.fieldName;
+      const isOptionMatch = item[filterField] === selectedOption.value;
+
       return isDateInRange && isOptionMatch;
 
       // return data.filter((i) => {
@@ -225,15 +234,17 @@ function TxHistory() {
     },
     {
       label: "Chain_Name",
+      fieldName: "txhistory_name",
       options: [
         { value: "MEDI", label: "MEDI" },
-        { value: "무슨밸류일까용", label: "XPLA" },
-        { value: "WEMIX", label: "위믹스" },
+        { value: "XPLA", label: "XPLA" },
+        { value: "WEMIX", label: "WEMIX" },
         { value: "Klay", label: "Klay" },
       ],
     },
     {
       label: "Chain_Type",
+      fieldName: "txhistory_type",
       options: [
         { value: "Send", label: "Send" },
         { value: "Receive", label: "Receive" },
@@ -263,13 +274,56 @@ function TxHistory() {
   };
   /////////////////////////
 
+  const customStyles = {
+    singleValue: (provided, state) => ({
+      ...provided,
+      color: "white",
+    }),
+    control: (provided, state) => ({
+      ...provided,
+      // backgroundColor: "white",
+      background: "none",
+      border: "1.2px solid white",
+      color: "white",
+      margin: "0 10px",
+      boxShadow: "none",
+      borderColor: state.isFocused || state.isSelected ? "white" : "white",
+      // boxShadow: state.isFocused ? "0 0 0 1px blue" : "none",
+      "&:hover": {
+        cursor: "pointer",
+        borderColor: "white",
+      },
+    }),
+
+    menu: (provided) => ({
+      ...provided,
+      color: "black",
+    }),
+
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? "blue" : "white",
+      color: state.isSelected ? "white" : "black",
+      "&:hover": {
+        color: "black",
+        backgroundColor: "lightgray",
+      },
+    }),
+
+    // 추가적인 스타일링이 필요한 경우 여기에 작성
+  };
+
   return (
     <MainDiv>
       <TitleTotal>
         <LeftTitle>
           <div>거래내역</div>
           <button>
-            <Select options={options} onChange={handleSelectChange} />
+            <Select
+              styles={customStyles}
+              options={options}
+              onChange={handleSelectChange}
+            />
           </button>
         </LeftTitle>
         <RightTitle>

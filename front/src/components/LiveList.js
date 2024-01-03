@@ -80,7 +80,7 @@ function LiveList() {
     const listingData = async () => {
       try {
         const res = await axios.get("http://localhost:3001/api/livelisting");
-        console.log(res.data);
+        // console.log(res.data);
         setAssetList(res.data.listing);
         setTotalPrice(res.data.total);
         setPrevAvgTotal(res.data.avgTotal);

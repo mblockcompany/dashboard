@@ -94,8 +94,8 @@ function LiveDashboard() {
 
         const categories = Object.keys(aggregatedData).slice(-7);
         const seriesData = categories.map((date) => aggregatedData[date]);
-        console.log(categories, "category data");
-        console.log(seriesData, "seriese data");
+        // console.log(categories, "category data");
+        // console.log(seriesData, "seriese data");
 
         const latestData = data
           .filter((asset) =>

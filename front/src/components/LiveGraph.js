@@ -23,12 +23,11 @@ const LiveDiv = styled.div`
   justify-content: center;
 `;
 const PaddingDiv = styled.div`
-  margin: 50px 0;
+  margin: 50px auto;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  flex: 2 1;
-
+  width: 90%;
   @media (max-width: 1000px) {
     flex-direction: column;
   }
@@ -39,8 +38,9 @@ const GraphDiv = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-
+  flex: 1;
   @media (max-width: 1000px) {
+    width: 100%;
     border-right: none;
     border-bottom: 1px solid white;
   }
@@ -61,7 +61,6 @@ const GraphDesc = styled.div`
 `;
 const ChartDiv = styled.div`
   width: 100%;
-
   min-width: 300px;
   @media (max-width: 1000px) {
     width: 50vw;
@@ -73,9 +72,11 @@ const RoundDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+  flex: 1;
   @media (max-width: 1000px) {
     display: flex;
+    width: 100%;
   }
 `;
 const RountTitle = styled.div`
@@ -120,6 +121,7 @@ function LiveGraph({ chartData, roundData }) {
   const [beforeRatio, setBeforeRatio] = useState(0);
   const [totalRatio, setTotalRatio] = useState(0);
   const [latestBalances, setLatestBalances] = useState({});
+  let sliceChartDate = chartData.categories.map((tx) => tx.slice(5));
   useEffect(() => {
     try {
       let livePrices =
@@ -197,7 +199,7 @@ function LiveGraph({ chartData, roundData }) {
       toolbar: { show: false },
     },
     xaxis: {
-      categories: chartData.categories,
+      categories: sliceChartDate,
     },
     yaxis: {
       labels: { show: false },
