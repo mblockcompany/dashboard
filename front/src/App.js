@@ -6,7 +6,6 @@ import LiveDashboard from "./components/LiveDashboard";
 function App() {
   return (
     <div className="App">
-      <Header2 />
       <header className="App-header">
         <div>
           <LiveDashboard />
