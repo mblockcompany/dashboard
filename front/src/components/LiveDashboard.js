@@ -4,7 +4,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import LiveList from "./LiveList";
 import AssetStatus from "./AssetStatus";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Link,
+  Navigate,
+} from "react-router-dom";
 import TxHistory from "./TxHistory";
 
 const MainDiv = styled.div`
