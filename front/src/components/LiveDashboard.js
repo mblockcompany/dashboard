@@ -142,6 +142,7 @@ function LiveDashboard() {
           </Link>
         </CateDiv>
         <Routes>
+          <Route path="/" element={<Navigate replace to="/status" />} />
           <Route
             path="/status"
             element={
