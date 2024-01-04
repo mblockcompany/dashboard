@@ -128,7 +128,7 @@ function AssetStatus() {
   useEffect(() => {
     const getAllAsset = async () => {
       try {
-        const res = await axios.get(`/`);
+        const res = await axios.get(`/api/live`);
         setData(res.data);
         setLoading(false);
       } catch (err) {

@@ -11,12 +11,12 @@ const cors = require("cors");
 
 app.use(cors());
 
-app.get("/", async (req, res) => {
+app.get("/api/live", async (req, res) => {
   const liveData = await liveCache();
   res.json(liveData);
 });
 
-app.get("/txhistory", async (req, res) => {
+app.get("/api/txhistory", async (req, res) => {
   const data = await txHistoryCache();
   res.json(data);
 });
