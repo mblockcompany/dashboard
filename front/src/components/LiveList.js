@@ -79,7 +79,9 @@ function LiveList() {
   useEffect(() => {
     const listingData = async () => {
       try {
-        const res = await axios.get("http://localhost:3001/api/livelisting");
+        const res = await axios.get(
+          `http://localhost:${process.env.REACT_APP_SERVER_PORT}/api/livelisting`
+        );
         // console.log(res.data);
         setAssetList(res.data.listing);
         setTotalPrice(res.data.total);

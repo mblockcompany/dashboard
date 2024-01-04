@@ -120,12 +120,14 @@ function TxHistory() {
   const [historyData, setHistoryData] = useState([]);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [selectedOption, setSelectedOption] = useState(null);
-
+  console.log("env", process.env.REACT_APP_SERVER_PORT);
   // 데이터 가져오기
   useEffect(() => {
     const historyCache = async () => {
       try {
-        const history = await axios.get("http://localhost:3001/txhistory");
+        const history = await axios.get(
+          `http://localhost:${process.env.REACT_APP_SERVER_PORT}/txhistory`
+        );
         const sortHistory = history.data.sort((a, b) => {
           return new Date(b.txhistory_date) - new Date(a.txhistory_date);
         });

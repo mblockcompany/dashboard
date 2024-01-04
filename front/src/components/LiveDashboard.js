@@ -62,7 +62,9 @@ function LiveDashboard() {
   useEffect(() => {
     const forApex = async () => {
       try {
-        const res = await axios.get(`http://localhost:3001`);
+        const res = await axios.get(
+          `http://localhost:${process.env.REACT_APP_SERVER_PORT}`
+        );
         const data = res.data;
         // 날짜별 데이터
         // 날짜와 체인 이름을 키로 사용하여 데이터를 그룹화합니다.
