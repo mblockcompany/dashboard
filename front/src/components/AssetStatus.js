@@ -128,9 +128,7 @@ function AssetStatus() {
   useEffect(() => {
     const getAllAsset = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:${process.env.REACT_APP_SERVER_PORT}/`
-        );
+        const res = await axios.get(`/`);
         setData(res.data);
         setLoading(false);
       } catch (err) {
