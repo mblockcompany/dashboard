@@ -73,5 +73,5 @@ async function insertHistory() {
     }
   }
 }
-insertHistory();
+// insertHistory();
 module.exports = insertHistory;

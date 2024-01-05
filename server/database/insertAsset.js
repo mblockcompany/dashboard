@@ -72,5 +72,5 @@ const assetStatus = async () => {
     }
   }
 };
-assetStatus();
+// assetStatus();
 module.exports = assetStatus;
