@@ -108,6 +108,7 @@ const xplaTx = async () => {
       };
     });
     // console.log(normalized);
+    console.log("Complete Xpla");
     return normalized;
 
     // console.log(sortTxs[54].tx.value.msg);

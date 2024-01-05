@@ -28,19 +28,33 @@ const CateDiv = styled.div`
   align-items: center;
   width: 100%;
 `;
+const LinkStyle = styled(Link)`
+  text-decoration: none;
+  &:hover,
+  &:active,
+  &:visited {
+    text-decoration: none;
+  }
+`;
 const DetailCate = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
   background: none;
-  border: none;
+  border: 0;
   font-size: 15px;
   font-weight: 600;
-  color: white;
+  color: #bebebe;
   padding: 15px 30px;
+  text-decoration: none;
+  outline: none;
   &:hover {
+    color: #d6d6d6;
     cursor: pointer;
-    color: gray;
+  }
+  &:active,
+  &:focus {
+    color: white;
   }
 `;
 const LiveDiv = styled.div`
@@ -140,12 +154,12 @@ function LiveDashboard() {
     <Router>
       <MainDiv>
         <CateDiv>
-          <Link to="/status">
+          <LinkStyle to="/status">
             <DetailCate>보유 현황</DetailCate>
-          </Link>
-          <Link to="/history">
+          </LinkStyle>
+          <LinkStyle to="/history">
             <DetailCate>거래 내역</DetailCate>
-          </Link>
+          </LinkStyle>
         </CateDiv>
         <Routes>
           <Route path="/" element={<Navigate replace to="/status" />} />

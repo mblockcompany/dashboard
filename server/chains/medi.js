@@ -98,7 +98,8 @@ const mediTx = async () => {
       })
       .flatMap((log) => log)
       .filter((item) => item !== null);
-    console.log(normalized, "extracted");
+    // console.log(normalized, "extracted");
+    console.log("Complete medi");
     return normalized;
   } catch (err) {
     console.log(err, "에러가났어요");

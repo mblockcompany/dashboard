@@ -37,7 +37,7 @@ const liveWemixBalance = async () => {
       {
         headers: {
           "api-key": `${process.env.WEMIX_APIKEY}`,
-          "content-key": "application/json",
+          "content-type": "application/json",
         },
       }
     );
@@ -106,12 +106,12 @@ const wemixTx = async () => {
           amount: tx.value / 1000000000000000000,
         };
       });
-    // console.log(filteredTxs);
+    console.log(filteredTxs);
     return filteredTxs;
   } catch (err) {
     console.log(err, "WEMIX API Error");
   }
 };
 
-// wemixTx();
+wemixTx();
 module.exports = { wemixTx, liveWemixBalance };

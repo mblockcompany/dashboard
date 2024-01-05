@@ -1,7 +1,6 @@
+require("dotenv").config();
 const { default: axios } = require("axios");
 const { ethers } = require("ethers");
-
-require("dotenv").config();
 
 const klayTransferUrl = "https://th-api.klaytnapi.com/v2/transfer";
 const klayBalanceUrl = "https://public-en-cypress.klaytn.net"; // public
@@ -95,7 +94,8 @@ const klayTx = async () => {
         };
       });
 
-    console.log(filteredKlay);
+    // console.log(filteredKlay);
+    console.log("Complete Klay");
     return { filteredKlay, totalBalance };
   } catch (err) {
     console.log(err, "klay.tx 에러");
