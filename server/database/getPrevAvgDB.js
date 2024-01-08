@@ -25,6 +25,7 @@ GROUP BY
 `
     );
     // console.log(avgQ.map((tx) => (tx.total += tx.average_total)));
+    // console.log(avgQ);
     return avgQ;
   } catch (err) {
     console.log(err);

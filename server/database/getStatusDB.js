@@ -26,7 +26,7 @@ const getStatus = async () => {
         FROM 
           assetstatus
       ) AS subquery
-      WHERE rn = 1
+      WHERE rn = 0
       ORDER BY subquery.assetstatus_date, subquery.assetstatus_name`
     );
     // console.log("쿼리끝?");
