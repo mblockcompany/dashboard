@@ -157,6 +157,7 @@ function AssetStatus() {
 
     filteredRangeData().forEach((item) => {
       const dateKey = item.assetstatus_date.split("T")[0];
+      console.log(dateKey);
       if (!groups[dateKey]) {
         groups[dateKey] = {
           date: dateKey,
@@ -175,7 +176,7 @@ function AssetStatus() {
 
   const groupedData = getGroupedData();
   // console.log(groupedData, "groupData");
-
+  console.log(groupedData, "그룹데이터");
   return (
     <>
       <StatusHeader>

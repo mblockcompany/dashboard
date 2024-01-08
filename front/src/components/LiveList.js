@@ -157,11 +157,13 @@ function LiveList() {
                   {prevAvgTotal !== undefined &&
                     (totalPrice - prevAvgTotal > 0 ? (
                       <div style={{ color: "#0ecb81" }}>
-                        + ₩ {(totalPrice - prevAvgTotal).toLocaleString()}
+                        + ₩{" "}
+                        {Math.abs(totalPrice - prevAvgTotal).toLocaleString()}
                       </div>
                     ) : (
                       <div style={{ color: "#f6465d" }}>
-                        - ₩ {(totalPrice - prevAvgTotal).toLocaleString()}
+                        - ₩{" "}
+                        {Math.abs(totalPrice - prevAvgTotal).toLocaleString()}
                       </div>
                     ))}
                 </>

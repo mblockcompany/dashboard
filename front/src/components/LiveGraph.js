@@ -184,13 +184,16 @@ function LiveGraph({ chartData, roundData }) {
   };
 
   const chartOptions = {
+    grid: {
+      borderColor: "#848484",
+    },
     tooltip: {
       style: {
-        colors: ["#000000"],
+        colors: "#863a3a",
       },
       theme: "dark",
     },
-    colors: ["#000000"],
+    colors: ["#ffffffff"],
     stroke: {
       curve: "smooth",
     },
@@ -200,6 +203,11 @@ function LiveGraph({ chartData, roundData }) {
     },
     xaxis: {
       categories: sliceChartDate,
+      labels: {
+        style: {
+          colors: "#ededed",
+        },
+      },
     },
     yaxis: {
       labels: { show: false },
