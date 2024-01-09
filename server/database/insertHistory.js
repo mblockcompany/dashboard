@@ -21,7 +21,7 @@ async function insertHistory() {
     ]);
     const klayTxs = klayResult.filteredKlay;
     const allTxs = [...xplaTxs, ...mediTxs, ...wemixTxs, ...klayTxs];
-    console.log(allTxs, "allTxs");
+    // console.log(allTxs, "allTxs");
     for (const tx of allTxs) {
       const { chainName, timestamp, type, fees, hash, memo, From, To, amount } =
         tx;
@@ -49,9 +49,9 @@ async function insertHistory() {
           From,
           To,
         ]);
-        console.log(`새로운데이터 삽입 : ${hash}`);
+        // console.log(`새로운데이터 삽입 : ${hash}`);
       } else {
-        console.log(`중복데이터 ${hash}`);
+        // console.log(`중복데이터 ${hash}`);
         // console.log("중복");
       }
     }

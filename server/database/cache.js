@@ -6,13 +6,17 @@ const getPrevAvg = require("./getPrevAvgDB");
 const insertAsset = require("./insertAsset");
 const insertHistory = require("./insertHistory");
 
-const getCache = () => {
-  insertAsset();
-  insertHistory();
-  cache.put("txHistory", getHistory(), 28800000);
-  cache.put("assetStatus", getStatus(), 28800000);
-  cache.put("liveListing", getListing(), 28800000);
-  cache.put("prevAvg", getPrevAvg(), 28800000);
+const getCache = async () => {
+  await insertAsset();
+  await insertHistory();
+  const status = await getStatus();
+  const history = await getHistory();
+  const listing = await getListing();
+  const prevAvg = await getPrevAvg();
+  cache.put("txHistory", history, 28800000);
+  cache.put("assetStatus", status, 28800000);
+  cache.put("liveListing", listing, 28800000);
+  cache.put("prevAvg", prevAvg, 28800000);
 };
 getCache();
 setInterval(getCache, 28800000);
@@ -21,7 +25,7 @@ setInterval(getCache, 28800000);
 const liveCache = async () => {
   const liveData = await cache.get("assetStatus");
   if (liveData) {
-    console.log("라이브데이터 캐싱");
+    console.log(liveData, "라이브데이터 캐싱");
   } else {
     console.log(new Date(), "캐시만료");
   }
