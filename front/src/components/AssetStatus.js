@@ -130,6 +130,7 @@ function AssetStatus() {
       try {
         const res = await axios.get(`/api/live`);
         setData(res.data);
+        console.log(res.data, "res");
         setLoading(false);
       } catch (err) {
         console.log(err, "자산현황 데이터가져오기 에러");
@@ -154,10 +155,8 @@ function AssetStatus() {
 
   const getGroupedData = () => {
     const groups = {};
-
     filteredRangeData().forEach((item) => {
       const dateKey = item.assetstatus_date.split("T")[0];
-      console.log(dateKey);
       if (!groups[dateKey]) {
         groups[dateKey] = {
           date: dateKey,
@@ -168,7 +167,7 @@ function AssetStatus() {
       groups[dateKey].listings.push(item);
       groups[dateKey].total += parseFloat(item.assetstatus_total);
     });
-    // console.log(groups, "groups");
+
     return Object.values(groups).sort(
       (a, b) => new Date(b.date) - new Date(a.date)
     );

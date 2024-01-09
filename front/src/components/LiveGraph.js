@@ -193,9 +193,10 @@ function LiveGraph({ chartData, roundData }) {
       },
       theme: "dark",
     },
-    colors: ["#ffffffff"],
+    colors: totalRatio > 0 ? ["#62f473"] : ["#f74141"],
     stroke: {
-      curve: "smooth",
+      curve: "straight",
+      width: 3,
     },
     chart: {
       type: "line",
