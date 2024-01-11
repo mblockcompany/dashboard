@@ -4,13 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import LiveList from "./LiveList";
 import AssetStatus from "./AssetStatus";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Link,
-  Navigate,
-} from "react-router-dom";
+import { Route, Routes, Link, Navigate } from "react-router-dom";
 import TxHistory from "./TxHistory";
 
 const MainDiv = styled.div`
@@ -151,46 +145,45 @@ function LiveDashboard() {
   }, []);
 
   return (
-    <Router>
-      <MainDiv>
-        <CateDiv>
-          <LinkStyle to="/status">
-            <DetailCate>보유 현황</DetailCate>
-          </LinkStyle>
-          <LinkStyle to="/history">
-            <DetailCate>거래 내역</DetailCate>
-          </LinkStyle>
-        </CateDiv>
-        <Routes>
-          <Route path="/" element={<Navigate replace to="/status" />} />
-          <Route
-            path="/status"
-            element={
-              <>
-                <LiveDiv>
-                  <LiveGraph chartData={chartData} roundData={roundData} />
-                  <LiveList />
-                </LiveDiv>
-                <BoundaryLine></BoundaryLine>
-                <LiveDiv>
-                  <AssetStatus />
-                </LiveDiv>
-              </>
-            }
-          />
-          <Route
-            path="/history"
-            element={
-              <>
-                <LiveDiv>
-                  <TxHistory />
-                </LiveDiv>
-              </>
-            }
-          />
-        </Routes>
-      </MainDiv>
-    </Router>
+    <MainDiv>
+      <CateDiv>
+        <LinkStyle to="/asset/status">
+          <DetailCate>보유 현황</DetailCate>
+        </LinkStyle>
+        <LinkStyle to="/asset/history">
+          <DetailCate>거래 내역</DetailCate>
+        </LinkStyle>
+      </CateDiv>
+      <Routes>
+        <Route path="/" element={<Navigate replace to="status" />} />
+        <Route path="*" element={<Navigate replace to="status" />} />
+        <Route
+          path="status"
+          element={
+            <>
+              <LiveDiv>
+                <LiveGraph chartData={chartData} roundData={roundData} />
+                <LiveList />
+              </LiveDiv>
+              <BoundaryLine />
+              <LiveDiv>
+                <AssetStatus />
+              </LiveDiv>
+            </>
+          }
+        />
+        <Route
+          path="history"
+          element={
+            <>
+              <LiveDiv>
+                <TxHistory />
+              </LiveDiv>
+            </>
+          }
+        />
+      </Routes>
+    </MainDiv>
   );
 }
 

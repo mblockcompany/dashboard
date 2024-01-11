@@ -1,14 +1,24 @@
-import logo from "./logo.svg";
 import "./App.css";
-import Header2 from "./components/Header";
 import LiveDashboard from "./components/LiveDashboard";
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <div>
-          <LiveDashboard />
+          <Router>
+            <Routes>
+              <Route path="/" element={<Navigate replace to="/asset" />} />
+              <Route path="/asset/*" element={<LiveDashboard />} />
+              <Route path="*" element={<Navigate replace to="/asset" />} />
+            </Routes>
+          </Router>
         </div>
       </header>
     </div>
