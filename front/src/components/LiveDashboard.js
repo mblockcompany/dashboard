@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import LiveList from "./LiveList";
 import AssetStatus from "./AssetStatus";
-import { Route, Routes, Link, Navigate } from "react-router-dom";
+import { Route, Routes, Link, Navigate, useLocation } from "react-router-dom";
 import TxHistory from "./TxHistory";
 
 const MainDiv = styled.div`
@@ -143,15 +143,50 @@ function LiveDashboard() {
     };
     forApex();
   }, []);
+  const location = useLocation();
+  const [clickStatus, setClickStatus] = useState(false);
+  const [clickHistory, setClickHistory] = useState(false);
+  const StatusClicked = () => {
+    setClickStatus(true);
+    setClickHistory(false);
+  };
+  const HistoryClicked = () => {
+    setClickStatus(false);
+    setClickHistory(true);
+  };
 
   return (
     <MainDiv>
       <CateDiv>
         <LinkStyle to="/asset/status">
-          <DetailCate>보유 현황</DetailCate>
+          <DetailCate
+            style={{
+              textDecoration: "none",
+              color: clickStatus ? "white" : "#bebebe",
+            }}
+            onClick={StatusClicked}
+          >
+            {location.pathname === "/asset/status" ? (
+              <u>보유 현황</u>
+            ) : (
+              <>보유 현황</>
+            )}
+          </DetailCate>
         </LinkStyle>
         <LinkStyle to="/asset/history">
-          <DetailCate>거래 내역</DetailCate>
+          <DetailCate
+            style={{
+              textDecoration: "none",
+              color: clickHistory ? "white" : "#bebebe",
+            }}
+            onClick={HistoryClicked}
+          >
+            {location.pathname === "/asset/history" ? (
+              <u>거래 내역</u>
+            ) : (
+              <>거래 내역</>
+            )}
+          </DetailCate>
         </LinkStyle>
       </CateDiv>
       <Routes>
