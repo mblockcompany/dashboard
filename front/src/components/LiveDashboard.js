@@ -144,7 +144,7 @@ function LiveDashboard() {
     forApex();
   }, []);
   const location = useLocation();
-  const [clickStatus, setClickStatus] = useState(false);
+  const [clickStatus, setClickStatus] = useState(true);
   const [clickHistory, setClickHistory] = useState(false);
   const StatusClicked = () => {
     setClickStatus(true);

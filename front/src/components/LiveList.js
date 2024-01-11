@@ -41,7 +41,8 @@ const RightBody = styled.div`
 `;
 const ListTitle = styled.div`
   display: flex;
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 500;
   width: 100%;
   justify-content: space-around;
   align-items: center;
