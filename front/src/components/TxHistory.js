@@ -4,6 +4,7 @@ import { forwardRef, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
+import InsertMemo from "./InsertMemo.js";
 
 const MainDiv = styled.div`
   width: 90%;
@@ -393,7 +394,13 @@ function TxHistory() {
                     {item.txhistory_to}
                   </BodyDetail>
                   <BodyDetail className="widePadding">
-                    {item.txhistory_memo}
+                    {item.memo_body != null ? (
+                      <>ex, MEMO</>
+                    ) : (
+                      <>
+                        <InsertMemo memo={item.memo_body} />
+                      </>
+                    )}
                   </BodyDetail>
                 </BodyTxDetail>
               );

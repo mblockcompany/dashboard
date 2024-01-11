@@ -11,7 +11,7 @@ const getStatus = async () => {
     let [...assetQ] = await pool.query(
       `SELECT 
         subquery.assetstatus_id,
-        subquery.assetstatus_date,
+        CONVERT_TZ(subquery.assetstatus_date, '+00:00', '+09:00') as assetstatus_date,
         subquery.assetstatus_name,
         subquery.assetstatus_balances,
         subquery.assetstatus_decrements,
