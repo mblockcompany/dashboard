@@ -32,7 +32,10 @@ const liveWemixBalance = async () => {
     const WemixBalance = await axios.post(
       `${wemixApi}/v1/accounts/balance`,
       {
-        addresses: ["0x8eab8a3535b6c2715dcb3da026c2a1241f08b28d"],
+        addresses: [
+          "0x8eab8a3535b6c2715dcb3da026c2a1241f08b28d",
+          "0x088AcFcd91aEEB39fF9aDbC0f5b5c36749D89fea",
+        ],
       },
       {
         headers: {
@@ -41,14 +44,24 @@ const liveWemixBalance = async () => {
         },
       }
     );
-    let filteredWemixBalance = WemixBalance.data.results.data.map(
-      (tx) => tx.balance / 1000000000000000000
-    );
-    return filteredWemixBalance;
+
+    let totalWemix = 0;
+    WemixBalance.data.results.data.forEach((i) => {
+      totalWemix += Number(i.balance);
+    });
+    const sumedWemixBalance = totalWemix / 1e18;
+    // console.log(typeof sumedWemixBalance);
+    return [sumedWemixBalance];
+    // let filteredWemixBalance = WemixBalance.data.results.data.map(
+    //   (tx) => tx.balance / 1000000000000000000
+    // );
+    // console.log(typeof filteredWemixBalance[0], "위믹스 밸런스");
+    // return filteredWemixBalance;
   } catch (err) {
     console.log(err, "위믹스 밸런스체크 에러");
   }
 };
+// liveWemixBalance();
 
 const wemixTx = async () => {
   const address = "0x8eab8a3535b6c2715dcb3da026c2a1241f08b28d";
@@ -106,12 +119,12 @@ const wemixTx = async () => {
           amount: tx.value / 1000000000000000000,
         };
       });
-    console.log(filteredTxs);
+    // console.log(filteredTxs);
     return filteredTxs;
   } catch (err) {
     console.log(err, "WEMIX API Error");
   }
 };
 
-wemixTx();
+// wemixTx();
 module.exports = { wemixTx, liveWemixBalance };

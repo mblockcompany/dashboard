@@ -3,22 +3,33 @@ const normalizeTransaction = require("../src/Normalizer");
 
 const address = "xpla1yzrrphdt6kywv9dvp63735yat427g7cc36u3rg"; // XPLA 지갑주소
 const apiUrl = "https://dimension-lcd.xpla.dev/"; // XPLA API
+const valoper = "xplavaloper1yzrrphdt6kywv9dvp63735yat427g7ccq8ltv4";
 
 const liveXplaTx = async () => {
   try {
     const XplaBalance = await axios.get(
       `${apiUrl}cosmos/bank/v1beta1/balances/${address}`
     );
+    const XplaCommission = await axios.get(
+      `${apiUrl}cosmos/distribution/v1beta1/validators/${valoper}/commission`
+    );
     const filteredXplaBalance = XplaBalance.data.balances.map(
       (tx) => tx.amount / 1000000000000000000
     );
-
-    return filteredXplaBalance;
+    const filteredXplaCommission =
+      XplaCommission.data.commission.commission.map(
+        (tx) => Number(tx.amount) / 1e18
+      );
+    // c;
+    // console.log(filteredXplaCommission;)
+    let totalXplaBalance = filteredXplaBalance[0] + filteredXplaCommission[0];
+    // console.log([totalXplaBalance]);
+    return [totalXplaBalance];
   } catch (err) {
     console.log("Xpla balance Check err", err);
   }
 };
-
+// liveXplaTx();
 const xplaTx = async () => {
   try {
     const [latestBlock, chainInfo] = await Promise.all([
@@ -119,5 +130,5 @@ const xplaTx = async () => {
     console.log(err, "xpla 에러");
   }
 };
-xplaTx();
+// xplaTx();
 module.exports = { xplaTx, liveXplaTx };
