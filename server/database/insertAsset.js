@@ -18,24 +18,84 @@ const assetStatus = async () => {
       liveXplaTx(),
       liveWemixBalance(),
     ]);
-
     const priceResults = await geckoPrice();
 
-    const chainData = chainResults.map((chain, index) => {
-      const chainNames = ["Klay", "Medi", "Xpla", "Wemix"];
-      return {
-        name: chainNames[index],
-        balance: chain[0],
-        price: priceResults[`${chainNames[index].toLowerCase()}Price`],
-      };
-    });
+    const chainData = await Promise.all(
+      chainResults.map(async (chain, index) => {
+        const chainNames = ["Klay", "Medi", "Xpla", "Wemix"];
+        const chainName = chainNames[index];
+
+        const today = new Date();
+        today.setHours(today.getHours() + 9); // KST (+9시간)으로 조정;
+        const yesterday = new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate() - 1
+        );
+        const todayStart = new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate() - 1
+        );
+        const todayEnd = new Date(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate()
+        );
+
+        const historySendQ = `
+    SELECT * FROM txhistory 
+    WHERE txhistory_name = ? 
+    AND txhistory_type = 'Send' 
+    AND txhistory_date >= ? 
+    AND txhistory_date < ?`;
+        const sendTransactions = await conn.query(historySendQ, [
+          chainName,
+          todayStart,
+          todayEnd,
+        ]);
+        const filteredSendTx = sendTransactions
+          .map((tx) => Number(tx.txhistory_amounts))
+          .reduce((acc, amount) => acc + amount, 0);
+
+        const prevBalance = `
+    SELECT assetstatus_balances FROM assetstatus
+    WHERE assetstatus_name = ? 
+    AND assetstatus_date < ?
+    ORDER BY assetstatus_date DESC, assetstatus_id DESC
+    LIMIT 1`;
+
+        const lastBalanceResult = await conn.query(prevBalance, [
+          chainName,
+          yesterday,
+        ]);
+        const lastBalance = lastBalanceResult[0].assetstatus_balances;
+        let increase = chain[0] - lastBalance;
+        const threshold = 0.000001;
+        if (Math.abs(increase) < threshold) {
+          increase = 0;
+        }
+
+        return {
+          name: chainName,
+          balance: chain[0],
+          price: priceResults[`${chainNames[index].toLowerCase()}Price`],
+          increase: increase,
+          decrease: filteredSendTx,
+        };
+      })
+    );
+
     console.log(chainData);
-    const AssetInsertQ = `insert into assetstatus(assetstatus_name, assetstatus_balances, assetstatus_prices) value(?,?,?)`;
+
+    const AssetInsertQ = `insert into assetstatus(assetstatus_name, assetstatus_balances, assetstatus_prices, assetstatus_increments, assetstatus_decrements) value(?,?,?,?,?)`;
     for (const data of chainData) {
       await conn.query(AssetInsertQ, [
         data.name,
         JSON.stringify(data.balance),
         data.price,
+        data.increase,
+        data.decrease,
       ]);
     }
     console.log("데이터 삽입완료");

@@ -30,11 +30,11 @@ const getStatus = async () => {
       ORDER BY subquery.assetstatus_date, subquery.assetstatus_name`
     );
     // console.log("쿼리끝?");
-    console.log(assetQ);
+    // console.log(assetQ);
     return assetQ;
   } catch (err) {
     console.log(err, "getStatus Error");
   }
 };
-getStatus();
+// getStatus();
 module.exports = getStatus;
