@@ -100,6 +100,7 @@ const wemixTx = async () => {
     const wemixApi = "https://api.wemix.com";
     const provider = new ethers.providers.JsonRpcProvider(wemixApi);
     try {
+        console.log("1");
         const resTx = await axios.get(
             `https://explorerapi.wemix.com/v1/accounts/${address}/transactions`,
             {
