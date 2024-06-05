@@ -55,6 +55,8 @@ async function insertHistory() {
         // console.log("중복");
       }
     }
+
+    console.log("Insert Histroy finished");
     // console.log(totalBalance, "totalbalance");
     //Asset Status Logic
     // for (const assetTx of allTxs) {

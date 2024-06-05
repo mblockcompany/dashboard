@@ -100,7 +100,7 @@ const klayTx = async () => {
     console.log(err, "klay.tx 에러");
   }
 };
-klayTx();
+
 module.exports = { klayTx, liveKlayTx };
 
 /*
