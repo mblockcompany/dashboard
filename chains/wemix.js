@@ -151,7 +151,7 @@ const wemixTx = async () => {
                     amount: tx.value / 1000000000000000000,
                 };
             });
-        // console.log(filteredTxs);
+        console.log("Complete Wemix");
         return filteredTxs;
     } catch (err) {
         console.log(err, "WEMIX API Error");
