@@ -109,9 +109,11 @@ const wemixTx = async () => {
             }
         );
 
+        console.log("1");
         const senderAddr = await resTx.data.results.data.map((tx) => tx.sender);
         const receiverAddr = await resTx.data.results.data.map((tx) => tx.receiver);
 
+        console.log("1");
         const senderContractCodes = await Promise.all(
             senderAddr.map(getContractCode)
         );
@@ -119,6 +121,7 @@ const wemixTx = async () => {
             receiverAddr.map(getContractCode)
         );
 
+        console.log("1");
         const CAReceive = receiverContractCodes
             .filter((code) => code.codeCA !== "0x")
             .map((code) => code.codeAddress);
@@ -126,6 +129,7 @@ const wemixTx = async () => {
             .filter((code) => code && code.codeCA !== "0x")
             .map((code) => code.codeAddress);
 
+        console.log("1");
         const filteredTxs = resTx.data.results.data
             .sort((a, b) => a.block_number - b.block_number)
             .filter(
